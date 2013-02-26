@@ -50,17 +50,31 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 				switch( $action ) {
 
-					case 'userforcereauthenticate':			//check_admin_referer( 'action' );
-															//wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 1, wp_get_referer() ) );
+					case 'userforcereauthenticate':			check_admin_referer( 'userforcereauthenticate' );
+															if( isset($_GET['user']) && is_numeric($_GET['user']) ) {
+																shrkey_set_usermeta_oncer( (int) $_GET['user'], '_shrkey_force_reauthentication', time() );
+																wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 1, wp_get_referer() ) );
+															} else {
+																wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 2, wp_get_referer() ) );
+															}
 															break;
 
 					case 'bulkuserforcereauthenticate':		if( is_multisite() && is_network_admin() ) {
 																check_admin_referer( 'bulk-users-network' );
+																if( isset($_POST['allusers']) ) {
+																	foreach( $_POST['allusers'] as $user ) {
+																		shrkey_set_usermeta_oncer( (int) $user, '_shrkey_force_reauthentication', time() );
+																	}
+																}
 															} else {
 																check_admin_referer( 'bulk-users' );
+																if( isset($_POST['users']) ) {
+																	foreach( $_POST['users'] as $user ) {
+																		shrkey_set_usermeta_oncer( (int) $user, '_shrkey_force_reauthentication', time() );
+																	}
+																}
 															}
-
-															//wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 3, wp_get_referer() ) );
+															wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 3, wp_get_referer() ) );
 															break;
 
 				}
@@ -103,16 +117,16 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 			if(isset( $_GET['reauthenticationmsg'] )) {
 				switch( $_GET['reauthenticationmsg'] ) {
 
-					case 1:		echo '<div id="message" class="updated fade"><p>' . __('User .', 'forcereauthentication') . '</p></div>';
+					case 1:		echo '<div id="message" class="updated fade"><p>' . __('User logged out.', 'forcereauthentication') . '</p></div>';
 								break;
 
-					case 2:		echo '<div id="message" class="error"><p>' . __('User could not be .', 'forcereauthentication') . '</p></div>';
+					case 2:		echo '<div id="message" class="error"><p>' . __('User could not be logged out.', 'forcereauthentication') . '</p></div>';
 								break;
 
-					case 3:		echo '<div id="message" class="updated fade"><p>' . __('Users .', 'forcereauthentication') . '</p></div>';
+					case 3:		echo '<div id="message" class="updated fade"><p>' . __('Users logged out.', 'forcereauthentication') . '</p></div>';
 								break;
 
-					case 4:		echo '<div id="message" class="error"><p>' . __('Users could not be.', 'forcereauthentication') . '</p></div>';
+					case 4:		echo '<div id="message" class="error"><p>' . __('Users could not be logged out.', 'forcereauthentication') . '</p></div>';
 								break;
 				}
 			}

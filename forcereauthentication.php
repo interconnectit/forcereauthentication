@@ -30,6 +30,7 @@ require_once('includes/functions.php');
 
 if( is_admin() ) {
 	require_once('classes/admin.forcereauthentication.php');
-} else {
-	require_once('classes/public.forcereauthentication.php');
 }
+
+// We need to add this part so we always log out regardless
+require_once('classes/public.forcereauthentication.php');
