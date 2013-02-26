@@ -10,9 +10,6 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 			add_filter( 'user_row_actions', array( &$this, 'add_user_action' ), 99, 2 );
 			add_filter( 'ms_user_row_actions', array( &$this, 'add_user_action' ), 99, 2 );
 
-			add_filter( 'bulk_actions-users', array( &$this, 'bulk_add_action' ), 99 );
-			add_filter( 'bulk_actions-users-network', array( &$this, 'bulk_add_action' ), 99 );
-
 			// Process any action clicks
 			add_action( 'load-users.php', array( &$this, 'process_user_queue_action' ) );
 
@@ -28,14 +25,7 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 		function add_user_action( $actions, $user_object ) {
 
-			return $actions;
-		}
-
-		function bulk_add_action( $actions ) {
-
-			if ( current_user_can( 'delete_users' ) ) {
-				$actions['bulkuserforcereauthenticate'] = __( 'Log Out', 'forcereauthentication' );
-			}
+			$actions['userforcereauthenticate'] = "<a class='userforcereauthenticate' href='" . wp_nonce_url( "users.php?action=userforcereauthenticate&amp;user=" . $user_object->ID, 'userforcereauthenticate' ) . "' title='" . __('Log out user', 'forcereauthentication') . "'>" . __( 'Log Out', 'forcereauthentication' ) . "</a>";
 
 			return $actions;
 		}
@@ -64,7 +54,12 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 															//wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 1, wp_get_referer() ) );
 															break;
 
-					case 'bulkuserforcereauthenticate':		//check_admin_referer( 'action' );
+					case 'bulkuserforcereauthenticate':		if( is_multisite() && is_network_admin() ) {
+																check_admin_referer( 'bulk-users-network' );
+															} else {
+																check_admin_referer( 'bulk-users' );
+															}
+
 															//wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 3, wp_get_referer() ) );
 															break;
 
@@ -72,7 +67,7 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 			}
 
-			// This is to attempt to add in some bulk operations
+			// This is to attempt to add in some bulk operations - bit of a hack, but no hook or filter to add in our own at the moment
 			add_action( 'all_admin_notices',  array( &$this, 'start_object_to_modify_bulk'), 99 );
 
 		}
@@ -82,7 +77,6 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 			$ouroption = "<option value='bulkuserforcereauthenticate'>" . __( 'Log Out', 'forcereauthentication' ) . "</option>\n";
 
 			if( is_multisite() && is_network_admin() ) {
-				//<option value='notspam'>Not Spam</option>
 				$content = preg_replace( "/<option value='notspam'>" . __( 'Not Spam', 'user' ) . "<\/option>/", "<option value='notspam'>" . __( 'Not Spam', 'user' ) . "</option>\n" . $ouroption, $content );
 			} else {
 				if( is_multisite() ) {
