@@ -27,7 +27,9 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 		function load_textdomain() {
 
-			load_plugin_textdomain( 'forcereauthentication', false, '/forcereauthentication/languages/');
+			$langpath = "/" . basename(dirname(plugin_dir_path(__FILE__))) . '/languages/';
+
+			load_plugin_textdomain( 'forcereauthentication', false, $langpath);
 
 		}
 
