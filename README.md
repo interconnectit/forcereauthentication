@@ -1,8 +1,8 @@
 # Force ReAuthentication
 
-## Description
-
 Enables a site administrator to log out a user remotely via the WordPress admin interface
+
+## Description
 
 Sometimes you need to log out all the users from your site (or a single user) and force them to re-login. This plugin adds a simple action link to the standard User admin page (and the network admin page) that will forcibly log out the user the next time they interact with your site.
 
