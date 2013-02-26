@@ -6,6 +6,8 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 		function __construct() {
 
+			add_action( 'plugins_loaded', array(&$this, 'load_textdomain'));
+
 			// Add the row actions
 			add_filter( 'user_row_actions', array( &$this, 'add_user_action' ), 99, 2 );
 			add_filter( 'ms_user_row_actions', array( &$this, 'add_user_action' ), 99, 2 );
@@ -21,6 +23,12 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 		function forcereauthenticationadmin() {
 			$this->__construct();
+		}
+
+		function load_textdomain() {
+
+			load_plugin_textdomain( 'forcereauthentication', false, '/forcereauthentication/languages/');
+
 		}
 
 		function add_user_action( $actions, $user_object ) {
