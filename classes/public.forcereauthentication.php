@@ -24,7 +24,11 @@ if( !class_exists( 'forcereauthenticationpublic') ) {
 				if(!empty($reauth)) {
 					// We have a oncer so force remove the logged in cookies
 					@wp_logout();
-					wp_safe_redirect( remove_query_arg( 'loggedout', 3, stripslashes( $_SERVER['REQUEST_URI'] ) ) );
+					if(is_admin()) {
+						wp_safe_redirect( wp_login_url( wp_get_referer() ) );
+					} else {
+						wp_safe_redirect( stripslashes( $_SERVER['REQUEST_URI'] ) );
+					}
 					exit;
 				}
 			}
