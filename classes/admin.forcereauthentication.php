@@ -35,7 +35,9 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 		function add_user_action( $actions, $user_object ) {
 
-			$actions['userforcereauthenticate'] = "<a class='userforcereauthenticate' href='" . wp_nonce_url( "users.php?action=userforcereauthenticate&amp;user=" . $user_object->ID, 'userforcereauthenticate' ) . "' title='" . __('Log out user', 'forcereauthentication') . "'>" . __( 'Log Out', 'forcereauthentication' ) . "</a>";
+			if( !shrkey_has_usermeta_oncer( $user_object->ID, '_shrkey_force_reauthentication' ) ) {
+				$actions['userforcereauthenticate'] = "<a class='userforcereauthenticate' href='" . wp_nonce_url( "users.php?action=userforcereauthenticate&amp;user=" . $user_object->ID, 'userforcereauthenticate' ) . "' title='" . __('Log out user', 'forcereauthentication') . "'>" . __( 'Log Out', 'forcereauthentication' ) . "</a>";
+			}
 
 			return $actions;
 		}
@@ -78,13 +80,15 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 																}
 															} else {
 																check_admin_referer( 'bulk-users' );
-																if( isset($_POST['users']) ) {
-																	foreach( $_POST['users'] as $user ) {
+
+																if( isset($_GET['users']) ) {
+																	foreach( $_GET['users'] as $user ) {
 																		shrkey_set_usermeta_oncer( (int) $user, '_shrkey_force_reauthentication', time() );
 																	}
 																}
 															}
 															wp_safe_redirect( add_query_arg( 'reauthenticationmsg', 3, wp_get_referer() ) );
+															exit;
 															break;
 
 				}
@@ -125,7 +129,7 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 		function output_admin_notices() {
 
 			if(isset( $_GET['reauthenticationmsg'] )) {
-				switch( $_GET['reauthenticationmsg'] ) {
+				switch( (int) $_GET['reauthenticationmsg'] ) {
 
 					case 1:		echo '<div id="message" class="updated fade"><p>' . __('User logged out.', 'forcereauthentication') . '</p></div>';
 								break;
@@ -138,6 +142,7 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 
 					case 4:		echo '<div id="message" class="error"><p>' . __('Users could not be logged out.', 'forcereauthentication') . '</p></div>';
 								break;
+
 				}
 			}
 

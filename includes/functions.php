@@ -1,5 +1,18 @@
 <?php
 
+if( !function_exists( 'shrkey_has_usermeta_oncer') ) {
+	function shrkey_has_usermeta_oncer( $user_id, $meta ) {
+
+		$value = get_user_meta( $user_id, $meta, true );
+		if(!empty($value)) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+}
+
 if( !function_exists( 'shrkey_get_usermeta_oncer') ) {
 	function shrkey_get_usermeta_oncer( $user_id, $meta ) {
 
