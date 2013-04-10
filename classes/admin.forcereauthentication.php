@@ -144,6 +144,8 @@ if( !class_exists( 'forcereauthenticationadmin') ) {
 								break;
 
 				}
+
+				$_SERVER['REQUEST_URI'] = remove_query_arg( array('reauthenticationmsg'), $_SERVER['REQUEST_URI'] );
 			}
 
 		}
