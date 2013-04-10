@@ -3,8 +3,7 @@ Contributors: shrkey
 Tags: security, admin, login
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 1.2
-Version: 1.2
+Stable tag: 1.3
 
 Enables a site administrator to log out a user remotely via the WordPress admin interface
 
@@ -17,3 +16,7 @@ Sometimes you need to log out all the users from your site (or a single user) an
 1. Download and unzip the plugin file and upload the directory to your wp-content/plugins directory or use the built in WordPress installer.
 1. Go to the Plugins admin page and Activate the plugin, if you want the plugin activated network wide then network activate the plugin in the Network admin plugins page.
 1. Once installed, you can force a user to login to your site again by clicking on the "Log Out" link under each user in the User admin pages of your WordPress site.
+== Screenshots ==
+
+1. Log Out a single user at a time
+2. Bulk Log Out option
