@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Force ReAuthentication
-Version: 1.3
+Version: 1.3.1
 Plugin URI: https://github.com/shrkey/forcereauthentication
 Description: Allows the admin user to force user accounts to reauthenticate
 Author: Shrkey
